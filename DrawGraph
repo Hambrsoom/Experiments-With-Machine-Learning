@@ -1,0 +1,52 @@
+import csv
+#import matplotlib.pyplot as plt
+
+filePathForEnglishTrainData = "./Assig1-Dataset/train_1.csv"
+filePathForGreekTrainData = "./Assig1-Dataset/train_2.csv"
+
+englishLetters = "./Assig1-Dataset/info_1.csv"
+greekLetters = "./Assig1-Dataset/info_2.csv"
+
+def createImageOfDataSet(filePathData, filePathLetters):
+    with open(filePathData, newline='') as file:
+        reader = csv.reader(file)
+        my_list = [row[-1] for row in reader]
+        dictOfLetters = switchTheIndexesIntoSymbols(filePathLetters)
+        my_dict = {dictOfLetters[i]:my_list.count(i) for i in my_list}
+        # printGrpaph(my_dict)
+
+def switchTheIndexesIntoSymbols(filePath):
+    with open(filePath, newline='') as file:
+        reader = csv.reader(file)
+        dictOfLetters = {}
+        isFirstRow = True
+        for row in reader:
+            if isFirstRow:
+                isFirstRow = False
+                continue
+            else:
+                dictOfLetters[row[0]] = row[1]
+        return dictOfLetters
+
+
+# def printGrpaph(my_dict):
+    # yAxeList = my_dict.values()
+    # xAxeList = my_dict.keys()
+    #
+    # plt.bar(xAxeList, yAxeList)
+#     # x-axis label
+#     plt.xlabel('Classes')
+#
+#     # frequency label
+#     plt.ylabel('No. of instances')
+#
+#     # plot title
+#     plt.title('Number of instances in each class')
+#
+#     # function to show the plot
+#     plt.show()
+
+
+createImageOfDataSet(filePathForEnglishTrainData, englishLetters)
+createImageOfDataSet(filePathForGreekTrainData, greekLetters)
+
