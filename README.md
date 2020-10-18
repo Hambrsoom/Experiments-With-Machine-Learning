@@ -9,7 +9,7 @@ The purpose of the project is to compare the performance of different Machine Le
 |  Zohal Mir         | 40033246 |
 
 ## Requirements
-- Have Jupyter Notebook installed in your computer. ([Link](https://jupyter.org/install)
+- Have Jupyter Notebook installed in your computer. ([Link](https://jupyter.org/install))
 - Have the libraries csv, numpy matplotlib, sklearn & pandas installed (i.e. pip install csv)
 - Make sure that the folder "Assig1-Dataset" exist in the directory of the project.
 
