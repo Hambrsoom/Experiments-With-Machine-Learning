@@ -1,5 +1,5 @@
 # Experiments-With-Machine-Learning
-The purpose of the 
+The purpose of the project is to compare the performance of different Machine Learning models.
 
 ## Team Members 👥
 | Name          | Student ID    |
