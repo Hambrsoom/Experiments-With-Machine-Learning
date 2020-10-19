@@ -20,7 +20,8 @@ The purpose of the project is to compare the performance of different Machine Le
 1. Clone the repository.
 2. Open the command line in the directory.
 3. Run the command line jupyter notebook to run.
-4. If you want to run the models on Dataset 2, make sure that the variable dataset=2.
+4. Open COMP472_A1.ipynb by clicking on it.
+5. If you want to run the models on Dataset 2, make sure that the variable dataset=2.
 By default, it will run on dataset 1 since dataset=1.
-5. Click on Run All which can be found in the Cell tab.  
-6. The generated csv files will reside in the directory of the project. 
+6. Click on Run All which can be found in the Cell tab.  
+7. The generated csv files will reside in the directory of the project. 
