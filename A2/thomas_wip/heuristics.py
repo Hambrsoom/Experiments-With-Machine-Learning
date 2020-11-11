@@ -3,3 +3,5 @@ def h0(puzzleArray):
         return 0
     else:
         return 1
+
+#manhattan

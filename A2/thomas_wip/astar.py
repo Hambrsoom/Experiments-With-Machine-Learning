@@ -1,4 +1,5 @@
 from pprint import pprint
+from bisect import insort 
 
 # sampleStateSpace = {
 #     "currentState": [1,2,3,4,5,6,7,0],
@@ -7,6 +8,7 @@ from pprint import pprint
 #     "hn": 4
 # }
 
+#file variable
 puzzleDimensions = {
     "numRows": 0,
     "numColumns": 0
@@ -20,16 +22,22 @@ def astar(puzzleArr, numRows, numColumns):
     puzzleDimensions["numColumns"] = numColumns
 
     open = [{
-        "currentState": puzzleArr,
+        "currentState": puzzleArr.copy(),
         "parent": None,
-        "gn": 0
+        "gn": 0,
+        "hn": 0
     }]
     closed = []
-    children = generateChildStates(puzzleArr, 0)
-    pprint(children)
 
-    for child in children:
-        pprint(isGoal(child['currentState']))
+    goalFound = False
+
+    while(not goalFound):
+        nodeWeAreLookingAt = open.pop(0)
+        closed.insert(0, nodeWeAreLookingAt)
+        children = generateChildStates(nodeWeAreLookingAt["currentState"], nodeWeAreLookingAt["gn"])
+        open.extend(children)
+        open = sorted(open, key=lambda k: k['hn'])
+        pprint(open)
 
 def isGoal(puzzleArr):
     return increasingHorizontallyWithBottomRightCorner0(puzzleArr) or increasingVerticallyWithBottomRightCorner0(puzzleArr)
@@ -74,25 +82,29 @@ def generateChildStates(puzzleArr, gn):
         children.append({
             "currentState": generateMoveLeft(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+1
+            "gn": gn+1,
+            "hn": 0,
         })
     if isRightEdge(zeroTileIndex, puzzleArr) == False:
         children.append({
             "currentState": generateMoveRight(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+1
+            "gn": gn+1,
+            "hn": 0
         })
     if isBottomEdge(zeroTileIndex, puzzleArr) == False:
         children.append({
             "currentState": generateMoveBottom(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+1
+            "gn": gn+1,
+            "hn": 0
         })
     if isTopEdge(zeroTileIndex, puzzleArr) == False:
         children.append({
             "currentState": generateMoveTop(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+1
+            "gn": gn+1,
+            "hn": 0
         })
 
     #wrapping move
@@ -100,25 +112,29 @@ def generateChildStates(puzzleArr, gn):
         children.append({
             "currentState": generateWrapLeftEdge(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+2
+            "gn": gn+2,
+            "hn": 0
         })
     if isBottomEdge(zeroTileIndex, puzzleArr) and isLeftEdge(zeroTileIndex, puzzleArr):
         children.append({
             "currentState": generateWrapLeftEdge(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+2
+            "gn": gn+2,
+            "hn": 0
         })
     if isTopEdge(zeroTileIndex, puzzleArr) and isRightEdge(zeroTileIndex, puzzleArr):
         children.append({
             "currentState": generateWrapRightEdge(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+2
+            "gn": gn+2,
+            "hn": 0
         })
     if isBottomEdge(zeroTileIndex, puzzleArr) and isRightEdge(zeroTileIndex, puzzleArr):
         children.append({
             "currentState": generateWrapRightEdge(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn+2
+            "gn": gn+2,
+            "hn": 0
         })
 
     #diagonal move
@@ -126,45 +142,53 @@ def generateChildStates(puzzleArr, gn):
         children.append({
             "currentState": swapTopLeftCorner(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
         children.append({
             "currentState": generateDiagonalTopLeft(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
     if isTopEdge(zeroTileIndex, puzzleArr) and isRightEdge(zeroTileIndex, puzzleArr):
         children.append({
             "currentState": swapTopRightCorner(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
         children.append({
             "currentState": generateDiagonalTopRight(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
     if isBottomEdge(zeroTileIndex, puzzleArr) and isLeftEdge(zeroTileIndex, puzzleArr):
         children.append({
             "currentState": swapBottomLeftCorner(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
         children.append({
             "currentState": generateDiagonalBottomLeft(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
     if isBottomEdge(zeroTileIndex, puzzleArr) and isRightEdge(zeroTileIndex, puzzleArr):
         children.append({
             "currentState": swapRightBottomCorner(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
         children.append({
             "currentState": generateDiagonalBottomRight(zeroTileIndex, puzzleArr.copy()),
             "parent": puzzleArr,
-            "gn": gn + 3
+            "gn": gn + 3,
+            "hn": 0
         })
     
     return children
