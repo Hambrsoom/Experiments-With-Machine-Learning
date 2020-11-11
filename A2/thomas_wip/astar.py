@@ -1,5 +1,6 @@
 from pprint import pprint
 from bisect import insort 
+from heuristics import h0 as desiredHeuristic
 
 # sampleStateSpace = {
 #     "currentState": [1,2,3,4,5,6,7,0],
@@ -34,15 +35,39 @@ def astar(puzzleArr, numRows, numColumns):
     while(not goalFound):
         nodeWeAreLookingAt = open.pop(0)
         closed.insert(0, nodeWeAreLookingAt)
+
+        goalFound = isGoal(nodeWeAreLookingAt['currentState'])
+
+        #get children, add to open list
         children = generateChildStates(nodeWeAreLookingAt["currentState"], nodeWeAreLookingAt["gn"])
+        children = removeStatesWeHaveAlreadyVisitedFromChildren(children, closed)
+        evaluateHeuristicOnChildren(children)
         open.extend(children)
         open = sorted(open, key=lambda k: k['hn'])
+
         pprint(open)
+    
+    print("========================")
+    pprint(open)
+
+def removeStatesWeHaveAlreadyVisitedFromChildren(children, closed):
+    for child in children:
+        for closedState in closed:
+            if isSameState(child, closedState):
+                children.remove(child)
+
+    return children
+
+def evaluateHeuristicOnChildren(children):
+    for child in children:
+        print(child)
+        child["hn"] = desiredHeuristic(child['currentState'])
 
 def isGoal(puzzleArr):
     return increasingHorizontallyWithBottomRightCorner0(puzzleArr) or increasingVerticallyWithBottomRightCorner0(puzzleArr)
 
 def increasingHorizontallyWithBottomRightCorner0(puzzleArr):
+    print(puzzleArr)
     arrCopy = puzzleArr.copy()
     lastIsZero = arrCopy.pop() == '0'
     return lastIsZero and all(int(puzzleArr[i]) <= int(puzzleArr[i+1]) for i in range(len(puzzleArr)-2)) #-2 since pop
