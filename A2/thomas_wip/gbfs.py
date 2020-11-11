@@ -15,7 +15,7 @@ puzzleDimensions = {
     "numColumns": 0
 }
 
-def astar(puzzleArr, numRows, numColumns):
+def gbfs(puzzleArr, numRows, numColumns):
     print("Running A* algo on the following puzzle:")
     print(puzzleArr)
 
@@ -26,8 +26,7 @@ def astar(puzzleArr, numRows, numColumns):
         "currentState": puzzleArr.copy(),
         "parent": None,
         "gn": 0,
-        "hn": 0,
-        "fn": 0
+        "hn": 0
     }]
     closed = []
 
@@ -47,15 +46,13 @@ def astar(puzzleArr, numRows, numColumns):
         children = generateChildStates(nodeWeAreLookingAt["currentState"], nodeWeAreLookingAt["gn"])
         children = removeStatesWeHaveAlreadyVisitedFromChildren(children, closed)
         evaluateHeuristicOnChildren(children)
-        evaluateStarFunctionOnChildren(children)
-
         open.extend(children)
-        open = sorted(open, key=lambda k: k['fn'])
+        open = sorted(open, key=lambda k: k['hn'])
     
     print("========================")
     print("Search Path")
     print("========================")
-    # pprint(closed)
+    pprint(closed)
 
     print("========================")
     print("Solution Path")
@@ -69,7 +66,7 @@ def astar(puzzleArr, numRows, numColumns):
     pprint(len(solutionPath))
     print('len of search path')
     pprint(len(closed))
-    
+
 def getSolutionPath(goalNode, closedArr):
     solutionPath = []
     solutionPath.append(goalNode)
@@ -107,10 +104,6 @@ def removeStatesWeHaveAlreadyVisitedFromChildren(children, closed):
 def evaluateHeuristicOnChildren(children):
     for child in children:
         child["hn"] = desiredHeuristic(child['currentState'])
-
-def evaluateStarFunctionOnChildren(children):
-    for child in children:
-        child["fn"] = child["hn"] + child["gn"]
 
 def isGoal(puzzleArr):
     return increasingHorizontallyWithBottomRightCorner0(puzzleArr) or increasingVerticallyWithBottomRightCorner0(puzzleArr)

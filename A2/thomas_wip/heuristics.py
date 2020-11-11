@@ -5,3 +5,6 @@ def h0(puzzleArray):
         return 1
 
 #manhattan
+def h1(puzzleArray, xDim, yDim):
+    index = puzzleArray.indexOf('0')
+    distance = 
