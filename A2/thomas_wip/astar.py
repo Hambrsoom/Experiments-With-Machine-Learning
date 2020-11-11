@@ -32,11 +32,14 @@ def astar(puzzleArr, numRows, numColumns):
 
     goalFound = False
 
+    goalNode = None
+
     while(not goalFound):
         nodeWeAreLookingAt = open.pop(0)
         closed.insert(0, nodeWeAreLookingAt)
 
         goalFound = isGoal(nodeWeAreLookingAt['currentState'])
+        if goalFound: goalNode = nodeWeAreLookingAt
 
         #get children, add to open list
         children = generateChildStates(nodeWeAreLookingAt["currentState"], nodeWeAreLookingAt["gn"])
@@ -48,7 +51,39 @@ def astar(puzzleArr, numRows, numColumns):
         pprint(open)
     
     print("========================")
-    pprint(open)
+    print("Search Path")
+    print("========================")
+    pprint(closed)
+
+    print("========================")
+    print("Solution Path")
+    print("========================")
+    solutionPath = getSolutionPath(goalNode, closed)
+    pprint(solutionPath)
+
+def getSolutionPath(goalNode, closedArr):
+    solutionPath = []
+    solutionPath.append(goalNode)
+    parentState = goalNode["parent"]
+
+    parent = getNodeFromState(parentState, closedArr)
+
+    while parent is not None:
+        solutionPath.append(parent)
+        parentState = parent["parent"]
+        parent = getNodeFromState(parentState, closedArr)
+
+    return solutionPath
+
+def getNodeFromState(state, puzzleArr):
+    node = None
+    try:
+        node = next(item for item in puzzleArr if item["currentState"] == state)
+        return node
+    except StopIteration:
+        return None
+
+    return node
 
 def removeStatesWeHaveAlreadyVisitedFromChildren(children, closed):
     for child in children:
